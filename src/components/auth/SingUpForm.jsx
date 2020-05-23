@@ -1,16 +1,23 @@
 import React from "react"
 import { reduxForm, Field } from "redux-form"
 import validate from "../utils/validator"
-import Input from "./Input"
+import Input from "../common/Input"
+import Loader from "../common/loader"
 import "./style.css"
 
 function SingUnForm(props) {
-	const { handleSubmit } = props
+	const { handleSubmit, reset, loading } = props
 	return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<form onSubmit={handleSubmit} className="auth-form">
-					<h3>Sing Up</h3>
+				<form
+					onSubmit={(value) => {
+						handleSubmit(value)
+						reset()
+					}}
+					className="auth-form"
+				>
+					<h3>Регистрация</h3>
 					<div className="form-group">
 						<Field
 							type="email"
@@ -35,7 +42,10 @@ function SingUnForm(props) {
 							label={"Repeat password "}
 						/>
 					</div>
-					<button className="btn btn-primary">Register</button>
+					<div className="d-flex justify-content-between">
+						<button className="btn btn-primary">Register</button>
+						{loading && <Loader />}
+					</div>
 				</form>
 			</div>
 		</div>

@@ -3,5 +3,10 @@
 	padding: 15px;
 	border: 1px #e6e5e5 solid;
 	border-radius: 5px;
-	box-shadow: 10px -10px 15px #c1bebe;
+	box-shadow: 5px 5px 15px #c1bebe;
+}
+.modal-wrapper {
+	display: block;
+	background-color: white;
+	border-radius: 5px;
 }

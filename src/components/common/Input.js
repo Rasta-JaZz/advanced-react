@@ -12,7 +12,7 @@ function Input(props) {
 		<div className="invalid-feedback">{error}</div>
 	)
 
-	const valid = () => {
+	const validation = () => {
 		if (error && touched) return "is-invalid"
 		else if (touched) return "is-valid"
 	}
@@ -20,7 +20,11 @@ function Input(props) {
 	return (
 		<div>
 			<label htmlFor="exampleInputPassword1">{label}</label>
-			<input className={`form-control ${valid()}`} {...input} type={type} />
+			<input
+				className={`form-control ${validation()}`}
+				{...input}
+				type={type}
+			/>
 			{errorText}
 		</div>
 	)

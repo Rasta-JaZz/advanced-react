@@ -1,17 +1,19 @@
 import React from "react"
 import { reduxForm, Field } from "redux-form"
-import Input from "./Input"
+import Input from "../common/Input"
 import validate from "../utils/validator"
+import Loader from "../common/loader"
+import { connect } from "react-redux"
 import "./style.css"
 
 function SingInForm(props) {
-	const { handleSubmit } = props
+	const { handleSubmit, reset, loading } = props
 
 	return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<form onSubmit={handleSubmit} className="auth-form">
-					<h3>Sing In</h3>
+				<form onSubmit={handleSubmit(reset)} className="auth-form">
+					<h3>Вход</h3>
 					<div className="form-group">
 						<Field
 							type="email"
@@ -28,9 +30,10 @@ function SingInForm(props) {
 							label={"Password"}
 						/>
 					</div>
-					<button type="submit" className="btn btn-primary">
-						Submit
-					</button>
+					<div className="d-flex justify-content-between">
+						<button className="btn btn-primary">Submit</button>
+						{loading && <Loader />}
+					</div>
 				</form>
 			</div>
 		</div>
@@ -40,4 +43,8 @@ function SingInForm(props) {
 export default reduxForm({
 	form: "singIn",
 	validate,
-})(SingInForm)
+})(
+	connect((state) => ({
+		loading: state.authReducer.loading,
+	}))(SingInForm)
+)
