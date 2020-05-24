@@ -1,17 +1,17 @@
 import React from "react"
-import SingInForm from "../auth/SingInForm"
-import SingUnForm from "../auth/SingUpForm"
+import SignInForm from "../auth/SignInForm"
+import SignUnForm from "../auth/SignUpForm"
 import { Route, NavLink } from "react-router-dom"
 import "./style.css"
 import { connect } from "react-redux"
-import { singUp } from "../../ducks/auth"
+import { signUp } from "../../ducks/auth"
 import Modal from "../common/Modal"
 
 function AuthPage(props) {
 	const [showModal, setShowModal] = React.useState(false)
 	const handleShow = () => setShowModal(!showModal)
-	const handleSingIn = (reset) => reset()
-	const handleSingUp = ({ email, password }) => {
+	const handleSignIn = (reset) => reset()
+	const handleSignUp = ({ email, password }) => {
 		props.singUp(email, password)
 	}
 
@@ -51,12 +51,12 @@ function AuthPage(props) {
 					<Modal show={handleShow}>
 						<Route
 							path="/auth/singUp"
-							render={() => <SingUnForm onSubmit={handleSingUp} />}
+							render={() => <SignUnForm onSubmit={handleSignUp} />}
 						/>
 						<Route
 							exact
 							path="/auth/singIn"
-							render={() => <SingInForm onSubmit={handleSingIn} />}
+							render={() => <SignInForm onSubmit={handleSignIn} />}
 						/>
 					</Modal>
 				)}
@@ -65,4 +65,4 @@ function AuthPage(props) {
 	)
 }
 
-export default connect(null, { singUp })(AuthPage)
+export default connect(null, { signUp })(AuthPage)

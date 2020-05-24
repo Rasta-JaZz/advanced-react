@@ -1,23 +1,19 @@
 import React from "react"
 import { reduxForm, Field } from "redux-form"
-import validate from "../utils/validator"
 import Input from "../common/Input"
+import validate from "../utils/validator"
 import Loader from "../common/loader"
+import { connect } from "react-redux"
 import "./style.css"
 
-function SingUnForm(props) {
+function SignInForm(props) {
 	const { handleSubmit, reset, loading } = props
+
 	return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<form
-					onSubmit={(value) => {
-						handleSubmit(value)
-						reset()
-					}}
-					className="auth-form"
-				>
-					<h3>Регистрация</h3>
+				<form onSubmit={handleSubmit(reset)} className="auth-form">
+					<h3>Вход</h3>
 					<div className="form-group">
 						<Field
 							type="email"
@@ -34,16 +30,8 @@ function SingUnForm(props) {
 							label={"Password"}
 						/>
 					</div>
-					<div className="form-group">
-						<Field
-							type="password"
-							name="repeatPassword"
-							component={Input}
-							label={"Repeat password "}
-						/>
-					</div>
 					<div className="d-flex justify-content-between">
-						<button className="btn btn-primary">Register</button>
+						<button className="btn btn-primary">Submit</button>
 						{loading && <Loader />}
 					</div>
 				</form>
@@ -53,6 +41,10 @@ function SingUnForm(props) {
 }
 
 export default reduxForm({
-	form: "signUp",
+	form: "singIn",
 	validate,
-})(SingUnForm)
+})(
+	connect((state) => ({
+		loading: state.authReducer.loading,
+	}))(SignInForm)
+)
