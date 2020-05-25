@@ -1,11 +1,11 @@
 import React from "react"
 
-function AdminPage(props) {
+function EventsPage(props) {
 	return (
 		<div className="container">
-			<h2>AdminPage</h2>
+			<h2>Events page </h2>
 		</div>
 	)
 }
 
-export default AdminPage
+export default EventsPage

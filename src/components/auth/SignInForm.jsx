@@ -7,12 +7,12 @@ import { connect } from "react-redux"
 import "./style.css"
 
 function SignInForm(props) {
-	const { handleSubmit, reset, loading } = props
+	const { handleSubmit, loading } = props
 
 	return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<form onSubmit={handleSubmit(reset)} className="auth-form">
+				<form onSubmit={handleSubmit} className="auth-form">
 					<h3>Вход</h3>
 					<div className="form-group">
 						<Field

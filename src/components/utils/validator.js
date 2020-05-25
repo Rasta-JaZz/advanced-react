@@ -12,7 +12,7 @@ const validate = ({
 	else if (!emailValidator.validate(email))
 		errors.email = "некорректный email адресс"
 	if (!password) errors.password = "введите пароль"
-	else if (password.length < 8)
+	else if (password.length < 4)
 		errors.password = "пароль должен содержать более 8 символов"
 
 	if (!repeatPassword) errors.repeatPassword = "обязательное поле"

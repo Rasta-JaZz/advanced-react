@@ -1,7 +1,7 @@
 import { appName } from "../config"
 import { produce } from "immer"
 import { v4 as uid } from "uuid"
-import { put, takeEvery } from "redux-saga/effects"
+import { put, takeEvery, call } from "redux-saga/effects"
 
 export const moduleName = "people"
 export const prefix = `${appName}/${moduleName}`
@@ -16,11 +16,12 @@ export function addUser(user) {
 	}
 }
 
-const addUserSaga = function* (action) {
-	const id = uid()
+export const addUserSaga = function* (action) {
+	const id = yield call(uid)
+
 	yield put({
 		type: ADD_USER,
-		payload: { ...action.payload.user, id: id },
+		payload: { ...action.payload, id },
 	})
 }
 
@@ -32,7 +33,7 @@ export default function userReducer(state = initialUserState, action) {
 	return produce(state, (draft) => {
 		switch (type) {
 			case ADD_USER:
-				draft.push({ ...payload })
+				draft.push({ ...payload.user, id: payload.id })
 				return draft
 			default:
 				return draft

@@ -10,13 +10,7 @@ function SignUnForm(props) {
 	return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<form
-					onSubmit={(value) => {
-						handleSubmit(value)
-						reset()
-					}}
-					className="auth-form"
-				>
+				<form onSubmit={handleSubmit} className="auth-form">
 					<h3>Регистрация</h3>
 					<div className="form-group">
 						<Field
