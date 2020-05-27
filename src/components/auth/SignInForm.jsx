@@ -45,6 +45,6 @@ export default reduxForm({
 	validate,
 })(
 	connect((state) => ({
-		loading: state.authReducer.loading,
+		loading: state.auth.loading,
 	}))(SignInForm)
 )

@@ -2,7 +2,7 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import { appName } from "../config"
 import { produce } from "immer"
-import { all, take, call, put, takeEvery, cps } from "redux-saga/effects"
+import { all, take, call, put } from "redux-saga/effects"
 import { push } from "react-router-redux"
 /***********
  ***********
@@ -87,7 +87,6 @@ export const signInSaga = function* () {
 }
 export const signOutSaga = function* () {
 	while (true) {
-		console.log(" :>> сайн аут сага")
 		yield take(SIGN_OUT_REQUEST)
 		try {
 			yield call([auth, auth.signOut])

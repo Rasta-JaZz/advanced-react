@@ -4,7 +4,7 @@ import "./style.css"
 function Loader(props) {
 	return (
 		<div className="loader-wrapper">
-			<div className="spinner-border text-success" role="status">
+			<div className="spinner-border text-light" role="status">
 				<span className="sr-only">Loading...</span>
 			</div>
 		</div>

@@ -50,6 +50,7 @@ function AuthPage(props) {
 			</div>
 		)
 	}
+
 	console.log("render :>> ")
 	return (
 		<div>
@@ -83,7 +84,7 @@ function AuthPage(props) {
 
 export default connect(
 	(state) => ({
-		signedIn: !!state.authReducer.user,
+		signedIn: !!state.auth.user,
 	}),
 	{ signUpAction, signOut, signIn },
 	null,
