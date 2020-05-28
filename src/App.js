@@ -4,6 +4,7 @@ import AdminPage from "./components/routes/adminPage"
 import AuthPage from "./components/routes/authPage"
 import PeoplePage from "./components/routes/peoplePage"
 import EventsPage from "./components/routes/eventsPage"
+import UnregisterPage from "./components/routes/unregisterPage"
 import "./index"
 
 function App(props) {
@@ -30,6 +31,7 @@ function App(props) {
 				<Route path="/auth" component={AuthPage} />
 				<Route path="/people" component={PeoplePage} />
 				<Route path="/events" component={EventsPage} />
+				<Route path="/unregister" component={UnregisterPage} />
 			</div>
 		</div>
 	)

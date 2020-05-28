@@ -4,11 +4,18 @@ import Input from "../components/common/Input"
 import validate from "../components/utils/validator"
 
 function NewPeopleForm(props) {
+	const { reset, handleSubmit } = props
 	return (
 		<div>
 			<div className="container">
 				<div className="row justify-content-md-center">
-					<form className="auth-form" onSubmit={props.handleSubmit}>
+					<form
+						className="auth-form"
+						onSubmit={(value) => {
+							handleSubmit(value)
+							reset()
+						}}
+					>
 						<h3>Добвить пользователя</h3>
 						<div className="form-group">
 							<Field name="firstName" component={Input} label={"Имя"} />
@@ -23,6 +30,7 @@ function NewPeopleForm(props) {
 							<button className="btn btn-primary">Добавить</button>
 						</div>
 					</form>
+					{/* <button onClick={() => props.}>reset</button> */}
 				</div>
 			</div>
 		</div>
