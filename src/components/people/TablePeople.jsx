@@ -1,7 +1,7 @@
 import React from "react"
 import { Table, Column } from "react-virtualized"
-import { usersSelector, fetchAllUsers } from "../ducks/people"
-import Loader from "../components/common/loader"
+import { usersSelector, fetchAllUsers } from "../../ducks/people"
+import Loader from "../common/loader"
 
 import "react-virtualized/styles.css"
 import { connect } from "react-redux"

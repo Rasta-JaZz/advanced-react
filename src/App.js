@@ -10,19 +10,35 @@ import "./index"
 function App(props) {
 	return (
 		<div>
-			<div className="container p-2 naw-bar">
+			<div className="container naw-bar h-3">
 				<div className="d-flex justify-content-around">
-					<NavLink to="/admin">
-						<button className="btn btn-outline-info">Admin</button>
+					<NavLink
+						to="/admin"
+						className="NavLink-style"
+						activeClassName="NavLink-style__active"
+					>
+						<div className="link-block">admin</div>
 					</NavLink>
-					<NavLink to="/auth">
-						<button className="btn btn-outline-info">Login</button>
+					<NavLink
+						to="/auth"
+						className="NavLink-style"
+						activeClassName="NavLink-style__active"
+					>
+						<div className="link-block">Log in</div>
 					</NavLink>
-					<NavLink to="/people">
-						<button className="btn btn-outline-info">Add people</button>
+					<NavLink
+						to="/people"
+						className="NavLink-style"
+						activeClassName="NavLink-style__active"
+					>
+						<div className="link-block">Add people</div>
 					</NavLink>
-					<NavLink to="/events">
-						<button className="btn btn-outline-info">Events</button>
+					<NavLink
+						to="/events"
+						className="NavLink-style"
+						activeClassName="NavLink-style__active"
+					>
+						<div className="link-block">Event table</div>
 					</NavLink>
 				</div>
 			</div>

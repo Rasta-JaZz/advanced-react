@@ -3,7 +3,7 @@ import "firebase/database"
 import { appName } from "../config"
 import { produce } from "immer"
 import { v4 as uid } from "uuid"
-import { put, takeEvery, call } from "redux-saga/effects"
+import { put, takeEvery, call, select } from "redux-saga/effects"
 import keyToIds from "../components/utils/keyToIds"
 import { createSelector } from "reselect"
 
@@ -22,13 +22,25 @@ export const ADD_USER_TO_DB_ERROR = `${prefix}/ADD_USER_TO_DB_ERROR`
 export const FETCH_USER_REQUEST = `${prefix}/FETCH_USER_REQUEST`
 export const FETCH_USER_SUCCESS = `${prefix}/FETCH_USER_SUCCESS`
 export const FETCH_USER_ERROR = `${prefix}/FETCH_USER_ERROR`
+export const ADD_EVENT_REQUEST = `${prefix}/ADD_EVENT_REQUEST`
+export const ADD_EVENT_SUCCESS = `${prefix}/ADD_EVENT_SUCCESS`
 
 /**** 
  selectors
  ****/
-export const usersModuleSelector = (state) => state.users.entities
+export const usersModuleSelector = (state) => state.users
 export const usersSelector = createSelector(usersModuleSelector, (users) => {
-	return Object.values(users)
+	return Object.values(users.entities)
+})
+export const participants = createSelector(usersSelector, (users) => {
+	return users.map((user) =>
+		!!user.events
+			? {
+					...user,
+					events: Object.values(user.events),
+			  }
+			: { ...user, events: [] }
+	)
 })
 
 /**** 
@@ -52,6 +64,13 @@ export function addToDb(user) {
 export function fetchAllUsers() {
 	return {
 		type: FETCH_USER_REQUEST,
+	}
+}
+
+export function addEventToPerson(eventId, personId) {
+	return {
+		type: ADD_EVENT_REQUEST,
+		payload: { eventId, personId },
 	}
 }
 
@@ -100,6 +119,21 @@ export const addUserToDb = function* (action) {
 	}
 }
 
+export const addEventToPersonSaga = function* (action) {
+	const { eventId, personId } = action.payload
+
+	const eventRef = firebase.database().ref(`people/${personId}/events`)
+
+	yield eventRef.push(eventId)
+
+	const personEvents = yield call([eventRef, eventRef.once], "value")
+
+	yield put({
+		type: ADD_EVENT_SUCCESS,
+		payload: Object.values(personEvents.val()),
+		person: personId,
+	})
+}
 /**** 
  reducer
  ****/
@@ -109,10 +143,11 @@ const initialUserState = {
 	error: null,
 	loading: false,
 	loaded: false,
+	events: [],
 }
 
 export default function userReducer(state = initialUserState, action) {
-	const { type, payload } = action
+	const { type, payload, person } = action
 
 	return produce(state, (draft) => {
 		switch (type) {
@@ -130,6 +165,9 @@ export default function userReducer(state = initialUserState, action) {
 			case ADD_USER_TO_DB_ERROR:
 				draft.error = payload.error
 				return draft
+			case ADD_EVENT_SUCCESS:
+				draft.entities[person].events = [...payload]
+				return draft
 			default:
 				return draft
 		}
@@ -140,4 +178,5 @@ export const saga = function* () {
 	yield takeEvery(ADD_USER_REQUEST, addUserSaga)
 	yield takeEvery(ADD_USER_TO_DB_REQUEST, addUserToDb)
 	yield takeEvery(FETCH_USER_REQUEST, fetchUserSaga)
+	yield takeEvery(ADD_EVENT_REQUEST, addEventToPersonSaga)
 }

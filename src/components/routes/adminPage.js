@@ -1,7 +1,8 @@
 import React from "react"
 import { Redirect, useLocation } from "react-router-dom"
 import { connect } from "react-redux"
-import ListPeople from "../../people/ListPeople"
+import { selectedSelector } from "../../ducks/events"
+import ListPeople from "../people/ListPeople"
 import EventList from "../events/SelectedEvents"
 
 function AdminPage(props) {
@@ -19,6 +20,15 @@ function AdminPage(props) {
 					<ListPeople />
 				</div>
 				<div>
+					<h2>Drug'n'Drop</h2>
+				</div>
+				<div>
+					{!props.selectedEvents && (
+						<div>
+							<h3>Нет выбранных конференций.</h3>
+							<h4> Выберите конференции в талице</h4>
+						</div>
+					)}
 					<EventList />
 				</div>
 			</div>
@@ -28,4 +38,5 @@ function AdminPage(props) {
 
 export default connect((state) => ({
 	loggedIn: !!state.auth.user,
+	selectedEvents: !!selectedSelector(state).length,
 }))(AdminPage)

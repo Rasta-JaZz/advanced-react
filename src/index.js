@@ -8,13 +8,17 @@ import store from "./Redux/index"
 import { ConnectedRouter as Router } from "connected-react-router"
 import history from "./history"
 import "bootstrap/dist/css/bootstrap.css"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
 import "./config"
 
 ReactDOM.render(
 	<Provider store={store}>
-		<Router history={history}>
-			<App />
-		</Router>
+		<DndProvider backend={HTML5Backend}>
+			<Router history={history}>
+				<App />
+			</Router>
+		</DndProvider>
 	</Provider>,
 	document.getElementById("root")
 )

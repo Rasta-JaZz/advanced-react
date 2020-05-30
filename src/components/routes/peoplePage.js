@@ -1,8 +1,8 @@
 import React from "react"
-import NewPeopleForm from "../../people/NewPeopleForm"
+import NewPeopleForm from "../people/NewPeopleForm"
 import { connect } from "react-redux"
 import { addToDb } from "../../ducks/people"
-import TablePeople from "../../people/TablePeople"
+import TablePeople from "../people/TablePeople"
 
 function PeoplePage(props) {
 	return (

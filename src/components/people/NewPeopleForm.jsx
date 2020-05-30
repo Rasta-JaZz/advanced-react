@@ -1,7 +1,7 @@
 import React from "react"
 import { reduxForm, Field } from "redux-form"
-import Input from "../components/common/Input"
-import validate from "../components/utils/validator"
+import Input from "../common/Input"
+import validate from "../utils/validator"
 
 function NewPeopleForm(props) {
 	const { reset, handleSubmit } = props

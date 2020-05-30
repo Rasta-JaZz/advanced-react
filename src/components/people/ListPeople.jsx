@@ -1,15 +1,16 @@
 import React from "react"
 import { List } from "react-virtualized"
 import "react-virtualized/styles.css"
-import PersonCard from "./PersonCard"
+import PersonCard from "./PersonCard.jsx"
 import { connect } from "react-redux"
-import { usersSelector, fetchAllUsers } from "../ducks/people"
+import { usersSelector, fetchAllUsers } from "../../ducks/people"
 
 function ListPeople(props) {
 	const { people, fetchAllUsers, loaded } = props
 
 	React.useEffect(() => {
 		if (!loaded) fetchAllUsers()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const rowRenderer = ({ index, key, style }) => (
