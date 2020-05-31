@@ -28,3 +28,7 @@
 	background-color: #f5f5f5;
 	overflow: hidden;
 }
+.button {
+	background-color: #ffb957 !important;
+	color: white !important;
+}

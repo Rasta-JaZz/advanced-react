@@ -26,14 +26,14 @@ function AuthPage(props) {
 
 	const getLinks = () => {
 		return signedIn ? (
-			<button className="btn btn-info" onClick={signOut}>
+			<button className="btn button" onClick={signOut}>
 				выход
 			</button>
 		) : (
 			<div className="d-flex col-2 flex-column">
 				<NavLink to="/auth/signIn">
 					<button
-						className="btn btn-primary button-width_150"
+						className="btn button button-width_150"
 						onClick={() => handleShow()}
 					>
 						Вход

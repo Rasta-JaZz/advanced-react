@@ -42,19 +42,17 @@ export function signIn(email, password) {
  ***********
  **sagas***/
 const auth = firebase.auth()
+
 export const signUpSaga = function* () {
 	while (true) {
 		const action = yield take(SIGN_UP_REQUEST)
 		try {
-			const user = yield call(
+			yield call(
 				[auth, auth.createUserWithEmailAndPassword],
 				action.payload.email,
 				action.payload.password
 			)
-			yield put({
-				type: SIGN_UP_SUCCESS,
-				payload: { user },
-			})
+			yield put(push("/admin"))
 		} catch (error) {
 			yield put({
 				type: SIGN_UP_ERROR,
@@ -63,6 +61,7 @@ export const signUpSaga = function* () {
 		}
 	}
 }
+
 export const signInSaga = function* () {
 	while (true) {
 		const action = yield take(SIGN_IN_REQUEST)
@@ -77,7 +76,7 @@ export const signInSaga = function* () {
 				type: SIGN_IN_SUCCESS,
 				payload: { user },
 			})
-			yield put(push("/auth"))
+			yield put(push("/admin"))
 		} catch (error) {
 			yield put({
 				type: SIGN_IN_ERROR,
@@ -86,17 +85,13 @@ export const signInSaga = function* () {
 		}
 	}
 }
+
 export const signOutSaga = function* () {
 	while (true) {
 		yield take(SIGN_OUT_REQUEST)
 		try {
 			yield call([auth, auth.signOut])
-		} catch (error) {
-			yield put({
-				type: SIGN_OUT_ERROR,
-				payload: { error },
-			})
-		}
+		} catch (_) {}
 	}
 }
 
@@ -171,5 +166,11 @@ export default function reducer(state = initialUserState, action) {
 }
 
 export const saga = function* () {
-	yield all([signOutSaga(), signInSaga(), signOutSaga(), watchStatusChange()])
+	yield all([
+		signOutSaga(),
+		signUpSaga(),
+		signInSaga(),
+		signOutSaga(),
+		watchStatusChange(),
+	])
 }

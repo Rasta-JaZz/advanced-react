@@ -220,7 +220,7 @@ export default function userReducer(state = initialUserState, action) {
 }
 
 export const saga = function* () {
-	yield spawn(cancelableSync)
+	yield spawn(realtimeSync)
 
 	yield takeEvery(ADD_USER_REQUEST, addUserSaga)
 	yield takeEvery(ADD_USER_TO_DB_REQUEST, addUserToDb)
