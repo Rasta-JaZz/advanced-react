@@ -85,6 +85,7 @@ function AuthPage(props) {
 export default connect(
 	(state) => ({
 		signedIn: !!state.auth.user,
+		error: state.auth.error,
 	}),
 	{ signUpAction, signOut, signIn },
 	null,

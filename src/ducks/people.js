@@ -3,7 +3,16 @@ import "firebase/database"
 import { appName } from "../config"
 import { produce } from "immer"
 import { v4 as uid } from "uuid"
-import { put, takeEvery, call, select } from "redux-saga/effects"
+import {
+	put,
+	takeEvery,
+	call,
+	spawn,
+	take,
+	race,
+	delay,
+} from "redux-saga/effects"
+import { eventChannel } from "redux-saga"
 import keyToIds from "../components/utils/keyToIds"
 import { createSelector } from "reselect"
 
@@ -134,6 +143,42 @@ export const addEventToPersonSaga = function* (action) {
 		person: personId,
 	})
 }
+
+const createPeopleSocket = () =>
+	eventChannel((emitter) => {
+		const callback = (data) => emitter({ data })
+		ref.on("value", callback)
+
+		return () => {
+			console.log("unsubscribe")
+
+			ref.off("value", callback)
+		}
+	})
+
+export const realtimeSync = function* () {
+	const chan = yield call(createPeopleSocket)
+	try {
+		while (true) {
+			const { data } = yield take(chan)
+
+			yield put({
+				type: FETCH_USER_SUCCESS,
+				payload: keyToIds(data.val()),
+			})
+		}
+	} finally {
+		yield call([chan, chan.close])
+		console.log("channel closed ")
+	}
+}
+
+export const cancelableSync = function* () {
+	yield race({
+		sync: realtimeSync(),
+		delay: delay(6000),
+	})
+}
 /**** 
  reducer
  ****/
@@ -175,6 +220,8 @@ export default function userReducer(state = initialUserState, action) {
 }
 
 export const saga = function* () {
+	yield spawn(cancelableSync)
+
 	yield takeEvery(ADD_USER_REQUEST, addUserSaga)
 	yield takeEvery(ADD_USER_TO_DB_REQUEST, addUserToDb)
 	yield takeEvery(FETCH_USER_REQUEST, fetchUserSaga)

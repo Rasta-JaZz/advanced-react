@@ -3,6 +3,7 @@ import "firebase/auth"
 import { appName } from "../config"
 import { produce } from "immer"
 import { all, take, call, put } from "redux-saga/effects"
+import { eventChannel } from "redux-saga"
 import { push } from "react-router-redux"
 /***********
  ***********
@@ -80,7 +81,7 @@ export const signInSaga = function* () {
 		} catch (error) {
 			yield put({
 				type: SIGN_IN_ERROR,
-				error,
+				payload: { error },
 			})
 		}
 	}
@@ -90,29 +91,39 @@ export const signOutSaga = function* () {
 		yield take(SIGN_OUT_REQUEST)
 		try {
 			yield call([auth, auth.signOut])
-			yield put({
-				type: SIGN_OUT_SUCCESS,
-			})
-			yield put(push("/auth"))
 		} catch (error) {
-			put({
+			yield put({
 				type: SIGN_OUT_ERROR,
-				payload: error,
+				payload: { error },
 			})
 		}
 	}
 }
 
-export const watchStatusChanged = function* () {
-	try {
-		yield call([auth, auth.onIdTokenChanged])
-	} catch (user) {
-		yield put({
-			type: SIGN_OUT_SUCCESS,
-			payload: { user },
-		})
+const createAuthChannel = () =>
+	eventChannel((emit) =>
+		firebase.auth().onAuthStateChanged((user) => emit({ user }))
+	)
+
+export const watchStatusChange = function* () {
+	const chan = yield call(createAuthChannel)
+	while (true) {
+		const { user } = yield take(chan)
+
+		if (user) {
+			yield put({
+				type: SIGN_IN_SUCCESS,
+				payload: { user },
+			})
+		} else {
+			yield put({
+				type: SIGN_OUT_SUCCESS,
+				payload: { user },
+			})
+		}
 	}
 }
+
 /***********
  ***********
  **reducer*/
@@ -120,6 +131,7 @@ const initialUserState = {
 	user: null,
 	error: null,
 	loading: false,
+	loaded: false,
 }
 export default function reducer(state = initialUserState, action) {
 	const { type, payload, error } = action
@@ -139,10 +151,18 @@ export default function reducer(state = initialUserState, action) {
 				draft.error = error
 				return draft
 			case SIGN_IN_SUCCESS:
-				draft.user = { ...payload.user }
+				draft.user = { ...payload }
+				draft.loaded = true
 				return draft
-			case SIGN_OUT_REQUEST:
+			case SIGN_IN_ERROR:
+				draft.error = payload.error.code
+				return draft
+			case SIGN_OUT_SUCCESS:
 				draft.user = null
+				draft.loaded = true
+				return draft
+			case SIGN_OUT_ERROR:
+				draft.error = payload.error
 				return draft
 			default:
 				return state
@@ -151,5 +171,5 @@ export default function reducer(state = initialUserState, action) {
 }
 
 export const saga = function* () {
-	yield all([signUpSaga(), signInSaga(), watchStatusChanged(), signOutSaga()])
+	yield all([signOutSaga(), signInSaga(), signOutSaga(), watchStatusChange()])
 }
